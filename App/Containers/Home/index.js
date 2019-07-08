@@ -1,79 +1,65 @@
 import React from 'react'
-import { Platform, Text, View, Button, ActivityIndicator, Image } from 'react-native'
+import { View } from 'react-native'
+import { Container } from 'native-base'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
-import ExampleActions from 'App/Stores/Example/Actions'
-import { liveInEurope } from 'App/Stores/Example/Selectors'
+import PostActions from 'App/Stores/Post/Actions'
+// import ExampleActions from 'App/Stores/Example/Actions'
 import styles from './styles'
-import { Images } from 'App/Theme'
+// import { Images } from 'App/Theme'
 import Header from 'App/Components/Header'
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\nCmd+D or shake for dev menu.',
-  android: 'Double tap R on your keyboard to reload,\nShake or press menu button for dev menu.',
-})
+import Spinner from 'App/Components/Spinner'
+import FlatList from 'App/Components/FlatList'
+import Components from './Components'
 
 class Screen extends React.Component {
   componentDidMount() {
-    this.props.fetchUser()
+    const { posts, fetchPosts } = this.props
+    if (!posts.length) {
+      fetchPosts()
+    }
+  }
+
+  renderItem({ item, index }) {
+    return <Components.PostCard {...item} />
   }
 
   render() {
-    const { user, userIsLoading, userErrorMessage, fetchUser, liveInEurope } = this.props
+    const { posts, postsIsLoading, postsErrorMessage } = this.props
 
     return (
-      <React.Fragment>
+      <Container>
         <Header />
 
-        <View style={styles.container}>
-          {userIsLoading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
+        <View style={styles.content}>
+          {postsIsLoading ? (
+            <Spinner />
           ) : (
-            <View>
-              <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={Images.logo} resizeMode={'contain'} />
-              </View>
-              <Text style={styles.text}>To get started, edit App.js</Text>
-              <Text style={styles.instructions}>{instructions}</Text>
-              {userErrorMessage ? (
-                <Text style={styles.error}>{userErrorMessage}</Text>
-              ) : (
-                <View>
-                  <Text style={styles.result}>
-                    {"I'm a fake user, my name is "}
-                    {user.name}
-                  </Text>
-                  <Text style={styles.result}>
-                    {liveInEurope ? 'I live in Europe !' : "I don't live in Europe."}
-                  </Text>
-                </View>
-              )}
-              <Button onPress={fetchUser} title="Refresh" />
-            </View>
+            <FlatList
+              data={posts}
+              contentContainerStyle={styles.listContent}
+              renderItem={this.renderItem}
+            />
           )}
         </View>
-      </React.Fragment>
+      </Container>
     )
   }
 }
 
 Screen.propTypes = {
-  user: PropTypes.object,
-  userIsLoading: PropTypes.bool,
-  userErrorMessage: PropTypes.string,
-  fetchUser: PropTypes.func,
-  liveInEurope: PropTypes.bool,
+  posts: PropTypes.array,
+  postsIsLoading: PropTypes.bool,
+  postsErrorMessage: PropTypes.string,
+  fetchPosts: PropTypes.func,
 }
 
-const mapStateToProps = (state) => ({
-  user: state.example.user,
-  userIsLoading: state.example.userIsLoading,
-  userErrorMessage: state.example.userErrorMessage,
-  liveInEurope: liveInEurope(state),
+const mapStateToProps = ({ post }) => ({
+  ...post,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchUser: () => dispatch(ExampleActions.fetchUser()),
+  fetchPosts: () => dispatch(PostActions.fetchPosts()),
 })
 
 export default connect(
