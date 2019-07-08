@@ -38,7 +38,7 @@ class Component extends React.Component {
     const { items, paginatedItems, page, lastPage } = this.state
     if (page < lastPage) {
       const _page = page + 1
-      const _paginatedItems = [...paginatedItems, ...this.paginate(items, page, 20)]
+      const _paginatedItems = [...paginatedItems, ...this.paginate(items, _page, 20)]
       this.setState({ ...this.state, paginatedItems: _paginatedItems, page: _page })
     }
   }
@@ -65,7 +65,7 @@ class Component extends React.Component {
         initialNumToRender={itemsPerPage}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="always"
-        removeClippedSubviews={false}
+        removeClippedSubviews
         keyExtractor={(item, index) => `item-${index}`}
         // getItemLayout={(data, index) => ({
         //   length: 110,
