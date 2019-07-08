@@ -14,6 +14,7 @@ export default {
   accent: '#D11C1A',
   blue: '#367AFF',
   yellow: '#F8E71C',
+  white: '#FFFFFF',
   // success: '#28a745',
   // warning: '#dc3545',
   // error: '#dc3545',
