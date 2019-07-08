@@ -8,7 +8,7 @@
 export default {
   transparent: 'rgba(0,0,0,0)',
   background: '#FAFAFA',
-  primary: '#367AFF',
+  primary: '#40B02D',
   darkPrimary: '#349200',
   accent: '#D11C1A',
   blue: '#367AFF',

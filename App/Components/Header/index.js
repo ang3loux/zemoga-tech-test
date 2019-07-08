@@ -8,7 +8,7 @@ class Component extends React.Component {
     return (
       <Header
         style={styles.header}
-        androidStatusBarColor={Colors.primary}
+        androidStatusBarColor={Colors.darkPrimary}
         iosBarStyle="light-content"
       >
         <Left>
