@@ -1,15 +1,14 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Alert } from 'react-native'
 import { Container } from 'native-base'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import PostActions from 'App/Stores/Post/Actions'
-// import ExampleActions from 'App/Stores/Example/Actions'
 import styles from './styles'
-// import { Images } from 'App/Theme'
 import Header from 'App/Components/Header'
 import Spinner from 'App/Components/Spinner'
 import FlatList from 'App/Components/FlatList'
+import FloatingButton from 'App/Components/FloatingButton'
 import Components from './Components'
 
 class Screen extends React.Component {
@@ -20,12 +19,44 @@ class Screen extends React.Component {
     }
   }
 
-  renderItem({ item, index }) {
-    return <Components.PostCard {...item} />
+  goToPost(post) {
+    const { navigation, readPost } = this.props
+    if (!post.wasRead) {
+      readPost(post.id)
+    }
+    navigation.navigate('', { post })
+  }
+
+  renderItem({ item: post }) {
+    const { deletePost } = this.props
+    return (
+      <Components.PostCard
+        {...post}
+        onNavigateToPost={() => this.goToPost(post)}
+        onDeletePost={() => deletePost(post.id)}
+      />
+    )
+  }
+
+  onDeleteAllPosts() {
+    const { deleteAllPosts } = this.props
+    Alert.alert(
+      'Warning',
+      'Are you sure?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        { text: 'OK', onPress: deleteAllPosts },
+      ],
+      { cancelable: false }
+    )
   }
 
   render() {
-    const { posts, postsIsLoading, postsErrorMessage } = this.props
+    const { posts, postsIsLoading } = this.props
 
     return (
       <Container>
@@ -38,20 +69,30 @@ class Screen extends React.Component {
             <FlatList
               data={posts}
               contentContainerStyle={styles.listContent}
-              renderItem={this.renderItem}
+              renderItem={this.renderItem.bind(this)}
             />
           )}
         </View>
+
+        <FloatingButton
+          position="bottomRight"
+          disabled={postsIsLoading || !posts.length}
+          onPress={this.onDeleteAllPosts.bind(this)}
+        />
       </Container>
     )
   }
 }
 
 Screen.propTypes = {
+  navigation: PropTypes.object.isRequired,
   posts: PropTypes.array,
   postsIsLoading: PropTypes.bool,
   postsErrorMessage: PropTypes.string,
   fetchPosts: PropTypes.func,
+  readPost: PropTypes.func,
+  deletePost: PropTypes.func,
+  deleteAllPosts: PropTypes.func,
 }
 
 const mapStateToProps = ({ post }) => ({
@@ -60,6 +101,9 @@ const mapStateToProps = ({ post }) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchPosts: () => dispatch(PostActions.fetchPosts()),
+  readPost: (id) => dispatch(PostActions.readPost(id)),
+  deletePost: (id) => dispatch(PostActions.deletePost(id)),
+  deleteAllPosts: () => dispatch(PostActions.deleteAllPosts()),
 })
 
 export default connect(
