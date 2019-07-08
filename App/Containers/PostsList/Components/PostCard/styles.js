@@ -26,6 +26,7 @@ export default StyleSheet.create({
     backgroundColor: Colors.blue,
   },
   star: {
+    fontSize: 29,
     marginLeft: 12,
     color: Colors.yellow,
   },

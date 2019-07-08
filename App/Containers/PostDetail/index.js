@@ -1,9 +1,10 @@
 import React from 'react'
 import { ScrollView } from 'react-native'
-import { Container, View, H1, Text } from 'native-base'
+import { Container, View, Button, Icon, H1, Text } from 'native-base'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import _ from 'lodash'
+import PostActions from 'App/Stores/Post/Actions'
 import UserActions from 'App/Stores/User/Actions'
 import CommentActions from 'App/Stores/Comment/Actions'
 import styles from './styles'
@@ -33,14 +34,33 @@ class Screen extends React.Component {
     }
   }
 
+  onSwitchFavorite() {
+    const { switchFavorite } = this.props
+    const { post } = this.state
+
+    this.setState({ post: { ...post, isFavorite: !post.isFavorite } }, () =>
+      switchFavorite(post.id)
+    )
+  }
+
   render() {
     const { user, userIsLoading, comments, commentsIsLoading } = this.props
     const { post } = this.state
-    console.log({ user, comments })
 
     return !post ? null : (
       <Container style={styles.container}>
-        <Header />
+        <Header
+          showBackButton
+          RightCustomComponent={() => (
+            <Button transparent onPress={this.onSwitchFavorite.bind(this)}>
+              <Icon
+                style={{ ...styles.starIcon, ...(post.isFavorite ? styles.isFavorite : {}) }}
+                name={post.isFavorite ? 'star' : 'star-outline'}
+                type="Ionicons"
+              />
+            </Button>
+          )}
+        />
 
         {userIsLoading || commentsIsLoading ? (
           <Spinner />
@@ -82,6 +102,7 @@ Screen.propTypes = {
   userIsLoading: PropTypes.bool,
   comments: PropTypes.array,
   commentsIsLoading: PropTypes.bool,
+  switchFavorite: PropTypes.func,
   fetchUser: PropTypes.func,
   fetchComments: PropTypes.func,
 }
@@ -92,6 +113,7 @@ const mapStateToProps = ({ user, comment }) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  switchFavorite: (id) => dispatch(PostActions.switchFavorite(id)),
   fetchUser: (id) => dispatch(UserActions.fetchUser(id)),
   fetchComments: (postId) => dispatch(CommentActions.fetchComments(postId)),
 })

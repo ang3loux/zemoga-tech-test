@@ -24,4 +24,11 @@ export default StyleSheet.create({
   textSeparation: {
     marginBottom: 10,
   },
+  starIcon: {
+    fontSize: 29,
+    color: Colors.white,
+  },
+  isFavorite: {
+    color: Colors.yellow,
+  },
 })

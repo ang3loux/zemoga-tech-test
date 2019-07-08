@@ -1,6 +1,6 @@
 import React from 'react'
 import { Alert } from 'react-native'
-import { Container, View } from 'native-base'
+import { Container, View, Button, Icon } from 'native-base'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import PostActions from 'App/Stores/Post/Actions'
@@ -56,11 +56,18 @@ class Screen extends React.Component {
   }
 
   render() {
-    const { posts, postsIsLoading } = this.props
+    const { posts, postsIsLoading, fetchPosts } = this.props
 
     return (
       <Container>
-        <Header />
+        <Header
+          title="Posts"
+          RightCustomComponent={() => (
+            <Button transparent onPress={fetchPosts}>
+              <Icon name="refresh" />
+            </Button>
+          )}
+        />
 
         <View style={styles.content}>
           {postsIsLoading ? (
