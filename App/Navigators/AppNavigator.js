@@ -1,12 +1,12 @@
 import { createAppContainer, createStackNavigator } from 'react-navigation'
 
-import Home from 'App/Containers/Home'
+import PostsList from 'App/Containers/PostsList'
 import SplashScreen from 'App/Containers/SplashScreen'
 
 const StackNavigator = createStackNavigator(
   {
     SplashScreen: SplashScreen,
-    MainScreen: Home,
+    MainScreen: PostsList,
   },
   {
     initialRouteName: 'SplashScreen',
