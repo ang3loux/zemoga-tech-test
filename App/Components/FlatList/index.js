@@ -1,6 +1,7 @@
 import React from 'react'
 import { FlatList } from 'react-native'
 import { PropTypes } from 'prop-types'
+import _ from 'lodash'
 import styles from './styles'
 
 const INITIAL_LIST = {
@@ -10,7 +11,7 @@ const INITIAL_LIST = {
   lastPage: 0,
 }
 
-class Component extends React.Component {
+class Component extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = { ...INITIAL_LIST }
@@ -18,14 +19,24 @@ class Component extends React.Component {
 
   componentDidMount() {
     const { data } = this.props
-    this.mergeData(data)
+    this.initializeList(data)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { data: prevData } = prevProps
+    const { data } = this.props
+    const shouldUpdate = !_.isEmpty(_.xorWith(prevData, data, _.isEqual))
+
+    if (shouldUpdate) {
+      this.updateList(data)
+    }
   }
 
   paginate(array = [], pageNumber = 0, pageSize = 20) {
     return array.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize)
   }
 
-  mergeData(data) {
+  initializeList(data) {
     const items = [...data]
     const paginatedItems = [...this.paginate(items)]
     const page = 0
@@ -34,11 +45,25 @@ class Component extends React.Component {
     this.setState({ items, paginatedItems, page, lastPage })
   }
 
+  updateList(data) {
+    const { paginatedItems } = this.state
+    const items = [...data]
+    const _paginatedItems = paginatedItems.reduce((array, paginatedItem) => {
+      const _item = items.find((item) => item.id === paginatedItem.id)
+      return _item ? [...array, _item] : [...array]
+    }, [])
+    const page = Math.floor(_paginatedItems.length / 20)
+    const lastPage = Math.floor(items.length / 20)
+
+    this.setState({ items, paginatedItems: _paginatedItems, page, lastPage })
+  }
+
   getMoreData() {
     const { items, paginatedItems, page, lastPage } = this.state
     if (page < lastPage) {
       const _page = page + 1
       const _paginatedItems = [...paginatedItems, ...this.paginate(items, _page, 20)]
+
       this.setState({ ...this.state, paginatedItems: _paginatedItems, page: _page })
     }
   }
