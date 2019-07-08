@@ -42,7 +42,7 @@ class Screen extends React.Component {
     const { deleteAllPosts } = this.props
     Alert.alert(
       'Warning',
-      'Are you sure?',
+      'You are going to delete all the post. Are you sure?',
       [
         {
           text: 'Cancel',
