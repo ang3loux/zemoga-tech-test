@@ -7,7 +7,13 @@ export function* fetchPosts() {
 
   const posts = yield call(postService.fetchPosts)
   if (posts) {
-    yield put(PostActions.fetchPostsSuccess(posts))
+    const _posts = posts.map((post, index) => ({
+      ...post,
+      wasRead: !(index < 20),
+      isFavorite: false,
+    }))
+
+    yield put(PostActions.fetchPostsSuccess(_posts))
   } else {
     yield put(PostActions.fetchPostsFailure('There was an error while fetching all the posts.'))
   }
