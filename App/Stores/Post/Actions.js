@@ -1,7 +1,10 @@
 import { createActions } from 'reduxsauce'
 
 const { Types, Creators } = createActions({
-  setPost: ['post'],
+  readPost: ['id'],
+  switchFavorite: ['id'],
+  deletePost: ['id'],
+  deleteAllPosts: null,
   fetchPosts: null,
   fetchPostsLoading: null,
   fetchPostsSuccess: ['posts'],
