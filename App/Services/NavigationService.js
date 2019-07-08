@@ -48,7 +48,15 @@ function navigateAndReset(routeName, params) {
   )
 }
 
+/**
+ * Call this function when you want to go back.
+ */
+function goBack() {
+  navigator.dispatch(NavigationActions.back())
+}
+
 export default {
+  goBack,
   navigate,
   navigateAndReset,
   setTopLevelNavigator,
