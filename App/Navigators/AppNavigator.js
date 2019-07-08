@@ -1,12 +1,12 @@
 import { createAppContainer, createStackNavigator } from 'react-navigation'
 
-import PostsList from 'App/Containers/PostsList'
-import SplashScreen from 'App/Containers/SplashScreen'
+import Screens from 'App/Containers'
 
 const StackNavigator = createStackNavigator(
   {
-    SplashScreen: SplashScreen,
-    MainScreen: PostsList,
+    SplashScreen: Screens.SplashScreen,
+    MainScreen: Screens.PostsList,
+    PostDetailScreen: Screens.PostDetail,
   },
   {
     initialRouteName: 'SplashScreen',

@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, Alert } from 'react-native'
-import { Container } from 'native-base'
+import { Alert } from 'react-native'
+import { Container, View } from 'native-base'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import PostActions from 'App/Stores/Post/Actions'
@@ -24,7 +24,7 @@ class Screen extends React.Component {
     if (!post.wasRead) {
       readPost(post.id)
     }
-    navigation.navigate('', { post })
+    navigation.navigate('PostDetailScreen', { post })
   }
 
   renderItem({ item: post }) {
