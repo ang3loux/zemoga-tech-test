@@ -33,7 +33,7 @@ class Component extends React.PureComponent {
   }
 
   paginate(array = [], pageNumber = 0, pageSize = 20) {
-    return array.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize)
+    return array.slice(0, (pageNumber + 1) * pageSize)
   }
 
   initializeList(data) {
@@ -46,25 +46,22 @@ class Component extends React.PureComponent {
   }
 
   updateList(data) {
-    const { paginatedItems } = this.state
+    const { page } = this.state
     const items = [...data]
-    const _paginatedItems = paginatedItems.reduce((array, paginatedItem) => {
-      const _item = items.find((item) => item.id === paginatedItem.id)
-      return _item ? [...array, _item] : [...array]
-    }, [])
-    const page = Math.floor(_paginatedItems.length / 20)
     const lastPage = Math.floor(items.length / 20)
+    const _page = page < lastPage ? page : lastPage
+    const _paginatedItems = [...this.paginate(items, _page, 20)]
 
-    this.setState({ items, paginatedItems: _paginatedItems, page, lastPage })
+    this.setState({ items, paginatedItems: _paginatedItems, page: _page, lastPage })
   }
 
   getMoreData() {
-    const { items, paginatedItems, page, lastPage } = this.state
+    const { items, page, lastPage } = this.state
     if (page < lastPage) {
       const _page = page + 1
-      const _paginatedItems = [...paginatedItems, ...this.paginate(items, _page, 20)]
+      const paginatedItems = [...this.paginate(items, _page, 20)]
 
-      this.setState({ ...this.state, paginatedItems: _paginatedItems, page: _page })
+      this.setState({ ...this.state, paginatedItems, page: _page })
     }
   }
 

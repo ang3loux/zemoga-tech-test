@@ -3,7 +3,7 @@ import Colors from 'App/Theme/Colors'
 
 export default StyleSheet.create({
   content: {
-    backgroundColor: Colors.background,
+    flex: 0,
   },
   tabColor: {
     backgroundColor: Colors.primary,
