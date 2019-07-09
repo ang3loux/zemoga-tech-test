@@ -7,7 +7,7 @@ import Colors from 'App/Theme/Colors'
 
 class Component extends React.PureComponent {
   render() {
-    const { LeftCustomComponent, showBackButton, title, RightCustomComponent } = this.props
+    const { hasTabs, LeftCustomComponent, showBackButton, title, RightCustomComponent } = this.props
 
     return (
       <Header
@@ -15,6 +15,7 @@ class Component extends React.PureComponent {
         androidStatusBarColor={Colors.darkPrimary}
         iosBarStyle="light-content"
         noLeft={!LeftCustomComponent && !showBackButton}
+        hasTabs={hasTabs}
       >
         <Left>
           {LeftCustomComponent && <LeftCustomComponent />}
@@ -37,13 +38,15 @@ class Component extends React.PureComponent {
 }
 
 Component.propTypes = {
-  showBackButton: PropTypes.bool,
+  hasTabs: PropTypes.bool,
   LeftCustomComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node, PropTypes.element]),
+  showBackButton: PropTypes.bool,
   title: PropTypes.string,
   RightCustomComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node, PropTypes.element]),
 }
 
 Component.defaultProps = {
+  hasTabs: false,
   showBackButton: false,
   title: ' ',
 }

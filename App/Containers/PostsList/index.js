@@ -6,6 +6,7 @@ import { PropTypes } from 'prop-types'
 import PostActions from 'App/Stores/Post/Actions'
 import styles from './styles'
 import Header from 'App/Components/Header'
+import HeaderTab from 'App/Components/HeaderTab'
 import Spinner from 'App/Components/Spinner'
 import FlatList from 'App/Components/FlatList'
 import FloatingButton from 'App/Components/FloatingButton'
@@ -57,10 +58,40 @@ class Screen extends React.Component {
 
   render() {
     const { posts, postsIsLoading, fetchPosts } = this.props
+    const favoritePosts = posts.filter((post) => post.isFavorite)
+
+    const AllPosts = (
+      <View style={styles.content}>
+        {postsIsLoading ? (
+          <Spinner />
+        ) : (
+          <FlatList
+            data={posts}
+            contentContainerStyle={styles.listContent}
+            renderItem={this.renderItem.bind(this)}
+          />
+        )}
+      </View>
+    )
+
+    const FavoritePosts = (
+      <View style={styles.content}>
+        {postsIsLoading ? (
+          <Spinner />
+        ) : (
+          <FlatList
+            data={favoritePosts}
+            contentContainerStyle={styles.listContent}
+            renderItem={this.renderItem.bind(this)}
+          />
+        )}
+      </View>
+    )
 
     return (
       <Container>
         <Header
+          hasTabs
           title="Posts"
           RightCustomComponent={() => (
             <Button transparent onPress={fetchPosts}>
@@ -69,17 +100,12 @@ class Screen extends React.Component {
           )}
         />
 
-        <View style={styles.content}>
-          {postsIsLoading ? (
-            <Spinner />
-          ) : (
-            <FlatList
-              data={posts}
-              contentContainerStyle={styles.listContent}
-              renderItem={this.renderItem.bind(this)}
-            />
-          )}
-        </View>
+        <HeaderTab
+          tabs={[
+            { title: 'ALL', content: AllPosts },
+            { title: 'FAVORITES', content: FavoritePosts },
+          ]}
+        />
 
         <FloatingButton
           position="bottomRight"
